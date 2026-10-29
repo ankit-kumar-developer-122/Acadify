@@ -31,3 +31,9 @@ Run after the first GitHub push, in this order:
 5. Educator: toggle weekdays, change time window, save, navigate away, reopen, and verify exact persisted values and dashboard summary; confirm invalid/empty schedules cannot be saved.
 6. Educator: accept/decline a sample request and publish a resource; verify it appears in the library.
 7. Admin demo and responsive layout smoke review.
+
+
+### Results
+- Production TypeScript/Vite build: passed after the final application commit and after this verification record was prepared.
+- Browser: Light, Study, Dark selection and persistence confirmed; marketplace discovery, tutor profile, booking request, schedule listing, local chat, simulated resource checkout, educator request acceptance, availability day/time save and reopen, creator resource publishing, Ankit profile preview, and Study buddy mock response confirmed.
+- No real payment or external service was invoked.

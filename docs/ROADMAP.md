@@ -54,6 +54,6 @@ Each phase should update this file and the relevant design/architecture/decision
 - [x] Added persistent Light, Study, and Dark appearance modes with macOS-inspired system typography, translucent chrome, and a segmented top-bar switch.
 - [x] Personalized the demo account and educator workspace for Ankit Kumar while keeping marketplace tutor examples as clearly synthetic sample profiles.
 - [x] Repaired weekly availability editing: day changes and editable start/end times now save together, reopen from stored values, reject empty/invalid windows, and use functional state updates to avoid stale writes.
-- [ ] After the requested GitHub push, run a fresh build and end-to-end browser review across learner and educator journeys.
+- [x] Post-push build and browser review completed across theme persistence, tutor search/profile/booking, learner schedule, local chat, resource checkout, educator request handling, availability persistence, resource publishing, Ankit profile preview, and Study buddy response.
 - [x] Added the Study buddy to desktop and mobile navigation so its mock assistant flow is reachable without a hidden route.
 - [x] Educator profile preview now identifies Ankit Kumar and clearly marks unfinished fields instead of reusing a marketplace tutor's identity or implying personal credentials.
