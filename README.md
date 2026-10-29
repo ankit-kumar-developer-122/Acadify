@@ -1,30 +1,16 @@
 # Acadify
 
-**Learn Better. Teach Smarter.**
+Acadify is a portfolio demo for a hyperlocal learning marketplace. It includes learner tutor discovery, educator tools, scheduling, local demo chat, resources, study assistant mock flows, and three appearance modes. Marketplace profiles and dashboard activity are synthetic examples.
 
-Acadify is a hyperlocal learning marketplace concept connecting learners with trusted local educators while helping educators build a teaching business. This workspace is the planning and demo application project.
+## Run it
 
-## Project status
+- `npm install`
+- `npm run dev` for the browser-only experience.
+- `npm run dev:stack` for the browser plus optional local Express API and SQLite demo store.
+- For Python tutor matching and the Streamlit dashboard: create a Python virtual environment, install `services/python/requirements.txt`, then start `npm run analytics` separately. The web app's matcher falls back to browser filtering when Python dependencies or the API are unavailable.
 
-Working portfolio demo scaffold is in place. All sample people, locations, reviews, sessions, messages, and transactions are synthetic. No real payments or data integrations are active.
+The optional local stack demonstrates Express REST endpoints, Node.js, SQLite, Python/Pandas/scikit-learn, Java's standard-library `PriorityQueue`, and Streamlit. The browser baseline continues to save its normal demo state in localStorage. API-generated data stays in the ignored `.data/` folder.
 
-## Product surfaces
+## Scope and safety
 
-- Learner: tutor discovery, profiles, filters, booking, messaging, schedule, learning resources, and study assistance.
-- Educator: request triage, schedule, weekly availability, public profile preview, creator resource publishing, and sample earnings analytics.
-- Admin: verification queue and content moderation demo.
-- AI: transparent tutor matching and study assistant with a clearly isolated mock/provider boundary.
-
-## Project documents
-
-See [`docs/`](docs/) for requirements, MVP boundaries, architecture, data, API contracts, design system, privacy/security, quality, deployment, roadmap, decision log, and approval gates.
-
-## Run locally
-
-Requires Node.js and npm. Run `npm install`, then `npm run dev`; use `npm run build` to produce a static build. The demo stores bookings, messages, and simulated resource purchases in this browser's local storage under `acadify-demo-v1`.
-
-Profile photos and font files are decorative remote assets; core demo behavior and seeded marketplace data are local. Saved tutors, educator availability, requests, messages, and published resources stay in this browser. The app does not send learner prompts or profile information to an AI service.
-
-## Local demo safety
-
-Until a specific approval is recorded in `docs/DECISIONS.md`, use synthetic data, local-only demo flows, no real payment credentials, no production deployment, and no collection of real student data.
+The app does not connect to real payments, external AI, messaging, maps, hosted databases, authentication, or deployment. Do not enter real learner/student data. The local API binds to loopback only and is not production-ready. Read [the project handbook](docs/README.md), especially its security, deployment, and approval-gate documents, before extending the integrations.

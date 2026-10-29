@@ -19,3 +19,8 @@ This folder is the source of truth for scope, architecture, product behavior, sa
 The educator studio now includes request triage, a weekly availability editor, profile preview, sample earnings analytics, and creator resource publishing. Its locally published resources appear in the learner library.
 
 Status tags: **Proposed** = working recommendation, **Approved** = owner-approved, **Implemented** = present in the app, **Deferred** = intentionally outside current scope.
+# Acadify project handbook
+
+See `../README.md` for setup and the local integration stack.
+
+Planning, architecture, and approval gates live in `PRODUCT_REQUIREMENTS.md`, `MVP_SCOPE.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `API_CONTRACTS.md`, `DESIGN_SYSTEM.md`, `SECURITY_PRIVACY.md`, `TESTING.md`, `DEPLOYMENT.md`, `ROADMAP.md`, `DECISIONS.md`, and `ADR_LOG.md`.

@@ -59,7 +59,9 @@ function App() {
   }
   const completeBooking = (date: string, time: string, mode: string) => {
     if (!bookingTutor) return
-    demo.addBooking({ id: `b${Date.now()}`, tutorId: bookingTutor.id, subject: bookingTutor.subject, date, time, mode, status: 'Requested', learner: 'Ankit Kumar' })
+    const booking = { id: `b${Date.now()}`, tutorId: bookingTutor.id, subject: bookingTutor.subject, date, time, mode, status: 'Requested' as const, learner: 'Ankit Kumar' }
+    demo.addBooking(booking)
+    void fetch('/api/bookings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(booking) }).catch(() => {})
     setBookingTutor(null); notify('Booking request sent — this is a demo.')
   }
   const buyResource = (id: string) => { demo.buy(id); setCheckoutResource(null); notify('Added to your library — simulated purchase.') }
@@ -132,8 +134,19 @@ function BookingModal({ tutor, onClose, onConfirm }: { tutor: Tutor; onClose: ()
 }
 function MatchModal({ onClose, onChoose }: { onClose: () => void; onChoose: (tutor: Tutor) => void }) {
   const [interest, setInterest] = useState('Physics'); const [mode, setMode] = useState('Online or in-person'); const [step, setStep] = useState(0)
-  const matches = tutors.filter(t => t.subjects.includes(interest) && (mode !== 'Online' || t.mode.includes('Online'))).slice(0, 2)
-  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}><section className="modal match-modal" role="dialog" aria-modal="true" aria-labelledby="match-title"><button className="modal-close" onClick={onClose} aria-label="Close"><X size={18}/></button>{step === 0 ? <><div className="match-spark"><Sparkles size={22}/></div><div className="modal-kicker">A FEW LITTLE QUESTIONS</div><h2 id="match-title">Let’s find your kind of mentor.</h2><p>We’ll suggest a few people based on what you’re hoping to learn.</p><label className="form-label">What are you curious about?</label><div className="match-options">{['Physics', 'Mathematics', 'Coding', 'Python', 'Java', 'Spoken English'].map(s => <button key={s} onClick={() => setInterest(s)} className={interest === s ? 'chosen' : ''}>{s}</button>)}</div><label className="form-label">How would you like to learn?</label><div className="match-options">{['Online or in-person', 'Online'].map(s => <button key={s} onClick={() => setMode(s)} className={mode === s ? 'chosen' : ''}>{s}</button>)}</div><button className="primary-button match-submit" onClick={() => setStep(1)}>Show me my matches <Sparkles size={15}/></button><p className="modal-disclaimer">Demo matching · Suggestions are based on sample tutor information.</p></> : <><div className="match-spark"><Sparkles size={22}/></div><div className="modal-kicker">A FEW PEOPLE TO MEET</div><h2 id="match-title">Your learning could click with…</h2><p>We matched on subject, teaching mode, and availability.</p>{matches.map(t => <button key={t.id} className="match-result" onClick={() => onChoose(t)}><img src={t.avatar}/><span><b>{t.name}</b><small>{t.headline}</small><em><Sparkles size={12}/> Good fit: {interest} · {t.mode[0]} · ₹{t.hourlyRate}/hr</em></span><ArrowRight size={17}/></button>)}{matches.length === 0 && <p>No sample matches here yet. Try another subject.</p>}<button className="back-link" onClick={() => setStep(0)}><ArrowLeft size={14}/> Change my answers</button><p className="modal-disclaimer">Suggested matches are AI-style demo output, not a guarantee of quality or a verified fact.</p></>}</section></div>
+  const [matchIds, setMatchIds] = useState<string[] | null>(null); const [matchSource, setMatchSource] = useState('local catalog'); const [loading, setLoading] = useState(false)
+  const matches = (matchIds ? matchIds.map(id => tutors.find(t => t.id === id)).filter((t): t is Tutor => !!t) : tutors.filter(t => t.subjects.includes(interest) && (mode === 'Online or in-person' || t.mode.includes(mode)))).slice(0, 4)
+  const findMatches = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/match', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ subject: interest, mode }) })
+      if (!response.ok) throw new Error('matcher offline')
+      const payload = await response.json() as { matches: { id: string }[]; source: string }
+      setMatchIds(payload.matches.map(match => match.id)); setMatchSource('Python TF-IDF matcher');
+    } catch { setMatchIds(null); setMatchSource('local catalog fallback') }
+    setLoading(false); setStep(1)
+  }
+  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}><section className="modal match-modal" role="dialog" aria-modal="true" aria-labelledby="match-title"><button className="modal-close" onClick={onClose} aria-label="Close"><X size={18}/></button>{step === 0 ? <><div className="match-spark"><Sparkles size={22}/></div><div className="modal-kicker">A FEW LITTLE QUESTIONS</div><h2 id="match-title">Let’s find your kind of mentor.</h2><p>We’ll suggest a few people based on what you’re hoping to learn.</p><label className="form-label">What are you curious about?</label><div className="match-options">{['Physics', 'Mathematics', 'Coding', 'Python', 'Java', 'Spoken English'].map(s => <button key={s} onClick={() => setInterest(s)} className={interest === s ? 'chosen' : ''}>{s}</button>)}</div><label className="form-label">How would you like to learn?</label><div className="match-options">{['Online or in-person', 'Online', 'In-person'].map(s => <button key={s} onClick={() => setMode(s)} className={mode === s ? 'chosen' : ''}>{s}</button>)}</div><button className="primary-button match-submit" onClick={() => void findMatches()} disabled={loading}>{loading ? 'Finding a fit…' : 'Show me my matches'} <Sparkles size={15}/></button><p className="modal-disclaimer">Suggestions use only the synthetic tutor catalog. No learner profile is sent.</p></> : <><div className="match-spark"><Sparkles size={22}/></div><div className="modal-kicker">A FEW PEOPLE TO MEET</div><h2 id="match-title">Your learning could click with…</h2><p>Matched on your subject and preferred format.</p>{matches.map(t => <button key={t.id} className="match-result" onClick={() => onChoose(t)}><img src={t.avatar}/><span><b>{t.name}</b><small>{t.headline}</small><em><Sparkles size={12}/> Good fit: {interest} · {t.mode[0]} · ₹{t.hourlyRate}/hr</em></span><ArrowRight size={17}/></button>)}{matches.length === 0 && <p>No sample matches here yet. Try another subject.</p>}<button className="back-link" onClick={() => setStep(0)}><ArrowLeft size={14}/> Change my answers</button><p className="modal-disclaimer">Ranked by {matchSource}. Suggestions are demo output, not a guarantee of quality or a verified fact.</p></>}</section></div>
 }
 
 function CheckoutModal({ resource, onClose, onConfirm }: { resource: Resource; onClose: () => void; onConfirm: () => void }) {
@@ -146,6 +159,8 @@ function ResourceDetailModal({ resource, onClose, onContinue }: { resource: Reso
 
 type DemoStore = ReturnType<typeof useDemoStore>
 function TeacherStudio({ demo, notify, onNavigate, onPreview }: { demo: DemoStore; notify: (message: string) => void; onNavigate: (page: Page) => void; onPreview: () => void }) {
+  const [priorityIds, setPriorityIds] = useState<string[]>([])
+  const [ranking, setRanking] = useState(false)
   const [availabilityOpen, setAvailabilityOpen] = useState(false)
   const [resourceOpen, setResourceOpen] = useState(false)
   const [earningsOpen, setEarningsOpen] = useState(false)
@@ -157,7 +172,17 @@ function TeacherStudio({ demo, notify, onNavigate, onPreview }: { demo: DemoStor
   const [resourceSubject, setResourceSubject] = useState('Physics')
   const [resourceType, setResourceType] = useState('Study notes')
   const [resourcePrice, setResourcePrice] = useState('149')
-  const pending = demo.bookings.filter(b => b.tutorId === '1' && b.status === 'Requested')
+  const pending = demo.bookings.filter(b => b.tutorId === '1' && b.status === 'Requested').sort((a, b) => priorityIds.indexOf(a.id) - priorityIds.indexOf(b.id))
+  const prioritizeRequests = async () => {
+    setRanking(true)
+    try {
+      const response = await fetch('/api/requests/prioritize', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ requests: pending.map(b => ({ id: b.id, priority: b.date === 'Today' ? 'urgent' : b.date === 'Tomorrow' ? 'standard' : 'flexible' })) }) })
+      if (!response.ok) throw new Error('ranker offline')
+      const result = await response.json() as { orderedIds: string[] }
+      setPriorityIds(result.orderedIds); notify('Requests prioritized by the local Java queue.')
+    } catch { setPriorityIds([...pending].sort((a, b) => (a.date === 'Today' ? 0 : a.date === 'Tomorrow' ? 1 : 2) - (b.date === 'Today' ? 0 : b.date === 'Tomorrow' ? 1 : 2)).map(b => b.id)); notify('Requests sorted by urgency in the browser fallback.') }
+    setRanking(false)
+  }
   const sessions = demo.bookings.filter(b => b.tutorId === '1' && b.status === 'Confirmed')
   const published = demo.teacherResources
   const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -190,7 +215,7 @@ function TeacherStudio({ demo, notify, onNavigate, onPreview }: { demo: DemoStor
       </div>
       <div className="teacher-columns">
         <div className="teacher-primary-column">
-          <section className="studio-panel" id="teacher-requests"><div className="studio-panel-head"><div><span className="section-kicker">NEEDS YOUR ATTENTION</span><h2>Session requests <span className="count-badge">{pending.length}</span></h2></div><button className="plain-link" onClick={() => onNavigate('schedule')}>All sessions <ArrowRight size={14}/></button></div>
+          <section className="studio-panel" id="teacher-requests"><div className="studio-panel-head"><div><span className="section-kicker">NEEDS YOUR ATTENTION</span><h2>Session requests <span className="count-badge">{pending.length}</span></h2></div><div className="request-head-actions"><button className="plain-link" onClick={() => void prioritizeRequests()} disabled={ranking || !pending.length}>{ranking ? 'Sorting…' : 'Prioritize requests'}</button><button className="plain-link" onClick={() => onNavigate('schedule')}>All sessions <ArrowRight size={14}/></button></div></div>
             {pending.length ? <div className="request-list">{pending.map(b => <article className="request-row" key={b.id}><div className="request-date"><span>{b.date === 'Tomorrow' ? '30' : '31'}</span><small>OCT</small></div><div className="request-main"><div><b>{b.learner || 'New learner'}</b><span className="request-new">NEW REQUEST</span></div><p>{b.subject}</p><small><Clock3 size={12}/> {b.date} at {b.time} <i>·</i> {b.mode} <i>·</i> 60 min</small></div><div className="request-actions"><button className="request-decline" onClick={() => { demo.updateBooking(b.id, 'Declined'); notify('Request declined in this demo.') }}>Decline</button><button className="request-accept" onClick={() => { demo.updateBooking(b.id, 'Confirmed'); notify('Session confirmed in this demo.') }}><Check size={14}/> Accept</button></div></article>)}</div> : <div className="studio-empty"><CheckCircle2 size={20}/><span><b>You’re all caught up.</b><small>New requests will appear here.</small></span></div>}
           </section>
           <section className="studio-panel"><div className="studio-panel-head"><div><span className="section-kicker">YOUR CALENDAR</span><h2>Upcoming sessions</h2></div><button className="plain-link" onClick={() => onNavigate('schedule')}>Open calendar <ArrowRight size={14}/></button></div>

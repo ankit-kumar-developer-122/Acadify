@@ -3,3 +3,8 @@ dist/
 .vite/
 *.tsbuildinfo
 .DS_Store
+.data/
+__pycache__/
+*.py[cod]
+*.class
+.venv/

@@ -59,3 +59,9 @@ Each phase should update this file and the relevant design/architecture/decision
 - [x] Educator profile preview now identifies Ankit Kumar and clearly marks unfinished fields instead of reusing a marketplace tutor's identity or implying personal credentials.
 
 - [x] Added Python and Java as searchable learning subjects, matching interests, and educator resource categories, with clearly synthetic sample programming resources.
+- [x] Consolidated synthetic tutor profiles into a shared JSON catalog used by the browser and local API.
+- [x] Added optional Express REST API and local SQLite demo booking/aggregate metrics storage; existing browser storage remains the browser demo's durable default.
+- [x] Added Python Pandas/scikit-learn matching and Java request prioritization with browser fallbacks and transparent source labels.
+- [x] Added optional Streamlit aggregate dashboard over synthetic local SQLite records.
+- [x] Added local integration setup, API contracts, security boundary, and ADR-003; no hosted services, payment, auth, or public deployment.
+- [ ] Push this integration phase, then perform a post-push build and end-to-end browser/API review.

@@ -1,6 +1,17 @@
 # API contracts
 
-Status: Proposed interface contracts; no network API is implemented yet.
+Status: Domain operations are implemented in the browser. The optional loopback API below is implemented for local portfolio use only.
+
+## Local HTTP endpoints
+
+- `GET /api/health` → local API/SQLite and runtime availability; contains no user data.
+- `GET /api/tutors` → shared synthetic tutor catalog.
+- `POST /api/match` with `{subject, mode, goal?}` → Python TF-IDF ranked tutor ids and method; goal is limited to 300 characters and never persisted.
+- `POST /api/requests/prioritize` with `{requests:[{id,priority}]}` → ids ranked by Java `PriorityQueue`; accepts at most 100 entries and `urgent | standard | flexible` priorities.
+- `POST /api/bookings` with `{tutorId,subject,date,time,mode}` → inserts a synthetic request into local SQLite. No auth or real learner identity is accepted.
+- `GET /api/metrics` → aggregate synthetic SQLite booking/event counts for the local Streamlit dashboard.
+
+All routes bind only to `127.0.0.1`; validation errors use `{code,message}`. The API is not suitable for public exposure and has no authentication, rate limiting, or production operational controls.
 
 ## Domain operations
 

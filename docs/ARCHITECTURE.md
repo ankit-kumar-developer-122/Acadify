@@ -1,21 +1,25 @@
 # Architecture
 
-Status: Approved and implemented for demo. React + Vite + TypeScript; local browser storage holds synthetic demo state.
+Status: Browser-only baseline is approved. An optional, loopback-only portfolio stack is implemented with synthetic data.
 
 ## Chosen demo implementation
 
-Use a TypeScript component-based web app with a clear separation between presentation, domain rules, data access, and external-provider adapters. For the first demo, keep data and services local and deterministic; expose seams so a backend or AI provider can be added later without implying that one exists.
+Keep React + Vite + TypeScript as the primary experience and keep browser storage as its resilient default. `npm run dev:stack` additionally starts a local Express API, SQLite demo store, Python/scikit-learn matcher, Java request-priority queue, and an optional Streamlit analytics view. All services bind locally or read local files; there are no hosted providers, accounts, real learner records, live payments, or public deployment.
 
 ## Logical areas
 
 - **Experience:** learner discovery, tutor profile, booking/schedule/chat, creator catalog, study assistant, educator workspace, admin workspace.
 - **Domain:** tutors, search/matching, availability, bookings, conversations, resources, moderation/verification demo states.
-- **Data boundary:** typed repositories over synthetic seed data and optional browser-local demo persistence.
-- **Provider boundary:** interfaces for maps, payments, messaging, identity/verification, storage, and AI; default implementation is unavailable or mock.
+- **Data boundary:** one shared synthetic tutor catalog at `src/data/catalog.json`; typed browser data plus optional SQLite demo events under ignored `.data/`.
+- **Local API:** Express routes for health, catalog, tutor matching, request prioritization, demo booking writes, and aggregate demo metrics. Vite proxies `/api` in local development.
+- **Python:** Pandas and scikit-learn TF-IDF/cosine similarity rank matching tutors using the local sample catalog and learner-selected subject/mode/optional goal. This is explainable sample-data matching, not an LLM or validated recommendation model.
+- **Java:** a standard-library `PriorityQueue` orders teacher requests by urgency. The educator studio falls back to browser sorting if Java is not available.
+- **Analytics:** Streamlit reads aggregate status counts from the local SQLite database; it does not transmit them.
+- **Provider boundary:** real maps, payments, messaging, identity/verification, hosted storage, and external AI remain unconnected.
 
 ## Proposed dependency direction
 
-UI → application/domain services → repository/provider interfaces → mock adapters. UI must not call third-party providers directly. Secrets must never be exposed in browser code.
+UI → local REST boundary (optional) → local Python/Java processes and SQLite. The browser-only demo still works when those optional processes are absent. UI must not call third-party providers directly. Secrets must never be exposed in browser code.
 
 ## Quality attributes
 
@@ -23,4 +27,4 @@ Responsive performance, accessible interaction, testable pure matching rules, ex
 
 ## Next approval gates
 
-Backend, authentication, hosting, and vendor selection each require a separate ADR and approval where material. See `DECISIONS.md` for approved choices.
+Authentication, hosting, external vendors, real personal data, and paid services require separate ADRs and owner approval. The new local stack is for portfolio demonstration only. See `DECISIONS.md` and `ADR_LOG.md`.
