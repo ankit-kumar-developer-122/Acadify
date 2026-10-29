@@ -43,3 +43,4 @@ html,body{background:var(--page);color:var(--ink);font-family:-apple-system,Blin
 :root[data-theme=dark] .session-date b,:root[data-theme=dark] .session-date small{color:var(--ink)}
 :root[data-theme=study] .compass-card button,:root[data-theme=study] .mini-add,:root[data-theme=study] .rail-resource-preview button{background:var(--surface-soft);color:var(--ink);border-color:var(--line)}
 @media(max-width:620px){.mobile-nav button{width:16.6667%}}
+.profile-ready-note{border:1px solid var(--line);background:var(--surface-soft);color:var(--muted);border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.55}
