@@ -5,7 +5,7 @@ Status: Proposed conceptual schema. Demo data must be synthetic.
 ## Entities
 
 - **User:** id, display name, role(s), avatar reference, locale; demo-only role switching.
-- **TutorProfile:** user id, headline, bio, subjects, teaching modes, service area label, languages, hourly rate in INR, experience, availability, demo verification state, rating summary with seeded provenance.
+- **TutorProfile:** user id, headline, bio, subjects, teaching modes, service area label, languages, hourly rate in INR, experience, programming topics such as Python and Java may be represented as searchable subjects, availability, demo verification state, rating summary with seeded provenance.
 - **AvailabilitySlot:** tutor id, start/end, mode, capacity, demo status.
 - **EducatorAvailability:** educator id, open weekdays, preferred time window, last updated; demo-only and local.
 - **Booking:** learner id, tutor id, slot, subject, mode, quoted amount, status (requested/accepted/declined/cancelled/completed), timestamps.

@@ -57,3 +57,5 @@ Each phase should update this file and the relevant design/architecture/decision
 - [x] Post-push build and browser review completed across theme persistence, tutor search/profile/booking, learner schedule, local chat, resource checkout, educator request handling, availability persistence, resource publishing, Ankit profile preview, and Study buddy response.
 - [x] Added the Study buddy to desktop and mobile navigation so its mock assistant flow is reachable without a hidden route.
 - [x] Educator profile preview now identifies Ankit Kumar and clearly marks unfinished fields instead of reusing a marketplace tutor's identity or implying personal credentials.
+
+- [x] Added Python and Java as searchable learning subjects, matching interests, and educator resource categories, with clearly synthetic sample programming resources.
