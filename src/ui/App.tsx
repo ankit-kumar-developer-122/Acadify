@@ -11,7 +11,7 @@ function readFavorites(): string[] { try { return JSON.parse(localStorage.getIte
 function formatAvailability(window: { start: string; end: string }) { const fmt = (v: string) => { const [h, m] = v.split(':').map(Number); return `${(h % 12 || 12)}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}` }; return `${fmt(window.start)}–${fmt(window.end)}` }
 const navItems: { id: Page; label: string; icon: typeof Compass }[] = [
   { id: 'discover', label: 'Discover', icon: Compass }, { id: 'messages', label: 'Messages', icon: MessageCircle },
-  { id: 'schedule', label: 'My schedule', icon: CalendarDays }, { id: 'resources', label: 'Resources', icon: BookOpen },
+  { id: 'schedule', label: 'My schedule', icon: CalendarDays }, { id: 'resources', label: 'Resources', icon: BookOpen }, { id: 'study', label: 'Study buddy', icon: Sparkles },
 ]
 
 function App() {

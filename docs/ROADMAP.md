@@ -55,3 +55,4 @@ Each phase should update this file and the relevant design/architecture/decision
 - [x] Personalized the demo account and educator workspace for Ankit Kumar while keeping marketplace tutor examples as clearly synthetic sample profiles.
 - [x] Repaired weekly availability editing: day changes and editable start/end times now save together, reopen from stored values, reject empty/invalid windows, and use functional state updates to avoid stale writes.
 - [ ] After the requested GitHub push, run a fresh build and end-to-end browser review across learner and educator journeys.
+- [x] Added the Study buddy to desktop and mobile navigation so its mock assistant flow is reachable without a hidden route.
