@@ -1,10 +1,10 @@
 # Architecture
 
-Status: Browser-only baseline is approved. An optional, loopback-only portfolio stack is implemented with synthetic data.
+Status: Browser-only baseline is approved. An optional, loopback-only portfolio stack is implemented with synthetic data. Decorative profile images load from Unsplash.
 
 ## Chosen demo implementation
 
-Keep React + Vite + TypeScript as the primary experience and keep browser storage as its resilient default. `npm run dev:stack` additionally starts a local Express API, SQLite demo store, Python/scikit-learn matcher, Java request-priority queue, and an optional Streamlit analytics view. All services bind locally or read local files; there are no hosted providers, accounts, real learner records, live payments, or public deployment.
+Keep React + Vite + TypeScript as the primary experience and keep browser storage as its resilient default. `npm run dev:stack` additionally starts a local Express API, SQLite demo store, Python/scikit-learn matcher, Java request-priority queue, and an optional Streamlit analytics view. API/data services bind locally or read local files; there are no hosted API/data providers, accounts, real learner records, live payments, or public deployment.
 
 ## Logical areas
 
